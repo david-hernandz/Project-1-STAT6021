@@ -1,0 +1,55 @@
+---
+output: html_document
+---
+
+# [Group Expectations Agreement - Group 9]{.underline}
+
+<br>
+
+<br>
+
+## Members & Contact Information
+
+-   David Hernandez - fxj5fe\@virginia.edu
+
+-   Alec Pixton - etk3pu\@virginia.edu
+
+-   Venkat Viswanathan - dfe2zj\@virginia.edu
+
+-   Darreion Bailey - rzu5vw\@virginia.edu
+
+<br>
+
+## Environment
+
+Our approach to maintaining a positive working environment is to discern each member's strengths that they can contribute towards the project. If more than one member shares the same strength for a particular task, we will split the work effort for that particular task.
+
+<br>
+
+## Processes
+
+1.  *Mode of Communication* - Our main method of communication will be via MS Teams. We have also exchanged phone numbers and school e-mail addresses.
+
+2.  *How to Schedule Meetings* - We have a channel in our MS Teams group dedicated to a schedule which we all agreed upon: **Mon, Wed, Fri - 8:00 PM EST**. Additionally, we have created reminders which send notifications to each member's Outlook account 1 hour prior to meetings.
+
+3.  *How to Assign Tasks* - The division of labor is as follows:
+
+    -   **Alec**: SLR analysis/chart; review hypothesis claims for `Carat`
+
+    -   **David**: Narratives; review hypothesis claims for `Clarity`
+
+    -   **Venkat**: Visualizations; review hypothesis claims for `Color`
+
+    -   **Darreion**: Visualizations; review hypothesis claims for `Cut`
+
+    Additionally, we have a channel in our MS Teams group dedicated to specific tasks, as well as a GitHub repository which we will store all of our files (code, markdown, etc.) so that each member has access to every part of the process.
+
+4.  *How to Handle Disagreements*
+
+    If for some reason there is a disagreement among team members, we have decided on a "majority-rule" schema – meaning the popular approach will be the preferred method.
+
+5.  *How to Handle Due Dates*
+
+    We have decided that each member should establish their own due dates for their individual responsibilities. If for some reason the original due date cannot be met by the team member, a notification on MS Teams or via email will need to be sent to all members of the group **at least** 24 hours in advance.
+
+    <br>
