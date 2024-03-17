@@ -4,7 +4,6 @@ author: "Darreion Bailey"
 date: "2024-03-16"
 output: html_document
 ---
-# Load the tidyverse package for data manipulation and visualization
 
 ```{r, echo=FALSE}
 library(tidyverse)
