@@ -5,14 +5,14 @@ date: "2024-03-16"
 output: html_document
 ---
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, message=FALSE, warning=FALSE, results='hide'}
 library(tidyverse)
 df <- read.csv("dataset.csv")
 ```
 
 ## Initializing distributions
 
-```{r, echo=FALSE}
+```{r}
 # Create a histogram for the carat variable
 ggplot(df, aes(x = carat)) +
   geom_histogram(binwidth = 0.1, fill = "blue", color = "black") +
