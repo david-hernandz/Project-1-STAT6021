@@ -1,0 +1,151 @@
+---
+title: "Untitled"
+author: "Alec Pixton"
+date: "2024-03-16"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(ggplot2)
+library(MASS)
+Data <- read.csv('diamonds4.csv', header = TRUE)
+
+```
+
+```{r}
+Data$carat_cat <- ifelse(Data$carat < .4999 | Data$carat > 0.75 & Data$carat < 0.999 | Data$carat > 1.25 & Data$carat < 1.499 | Data$carat > 1.75 & Data$carat < 1.999 | Data$carat > 2.25 & Data$carat < 2.499 | Data$carat > 2.75 & Data$carat < 2.999 | Data$carat > 3.25 & Data$carat < 3.499 | Data$carat > 3.75 & Data$carat < 3.999 | Data$carat > 4.25 & Data$carat < 4.499 | Data$carat > 4.75 & Data$carat < 4.999 | Data$carat > 5.25 & Data$carat < 5.499 | Data$carat > 5.75 & Data$carat < 5.999 | Data$carat > 6.25 & Data$carat < 6.499 | Data$carat > 6.75 & Data$carat < 6.999 | Data$carat > 7.25 & Data$carat < 7.499, "low", "high")
+```
+
+```{r}
+ggplot(Data, aes(x=carat,y=price))+
+  geom_point()+
+  geom_smooth(method='lm')
+  labs(x="Carat", y="Price", title="Price by Carat Weight")
+```
+
+```{r}
+result <- lm(price~carat, data=Data)
+par(mfrow=c(2,2))
+plot(result)
+```
+
+The variance of the residuals is not constant. The variance increases at higher values.
+The residuals are not spread evenly across 0.
+To stabilize the variance first we transform the response variable.
+
+```{r}
+MASS::boxcox(result,lambda=seq(.28,0.35,by=0.01))
+```
+
+Choose lambda = 0.31.
+
+```{r}
+Data$transformed_price = Data$price^0.31
+```
+
+```{r}
+ggplot(Data, aes(x=carat,y=transformed_price))+
+  geom_point()+
+  geom_smooth(method='lm')
+  labs(x="Carat", y="Price", title="Price by Carat Weight")
+```
+
+```{r}
+price_transformed_result <- lm(transformed_price~carat, data=Data)
+par(mfrow=c(2,2))
+plot(price_transformed_result)
+```
+
+```{r}
+Data$log_trans_price <- log(Data$price)
+```
+
+```{r}
+ggplot(Data, aes(x=carat,y=log_trans_price))+
+  geom_point()+
+  geom_smooth(method='lm')
+  labs(x="Carat", y="Price", title="Price by Carat Weight")
+```
+
+
+```{r}
+log_transformed_result <- lm(log_trans_price~carat, data=Data)
+par(mfrow=c(2,2))
+plot(log_transformed_result)
+```
+
+```{r}
+Data$log_carat <- log(Data$carat)
+```
+
+```{r}
+log_log_tranform <- lm(log_trans_price~log_carat, data = Data)
+par(mfrow=c(2,2))
+plot(log_log_tranform)
+```
+
+```{r}
+summary(log_log_tranform)
+```
+
+
+```{r}
+ggplot(Data, aes(x=log_carat,y=log_trans_price))+
+  geom_point()+
+  geom_smooth(method='lm')
+  labs(x="Carat", y="Price", title="Price by Carat Weight")
+```
+
+
+
+**carat_cat**
+
+```{r}
+high_carat <- which(Data$carat_cat=='high')
+```
+
+
+
+
+
+
+```{r}
+ggplot(Data, aes(x = log_carat, y = log_trans_price)) +
+  geom_point(aes(color = cut), alpha = 0.5) +
+  facet_wrap(~cut)+
+  theme_minimal() +
+  labs(title = "Carat vs. Price by Color", x = "Carat", y = "Price")
+```
+
+
+
+
+
+
+
+The log transformed price and carat reveals that there is little evidence to support lower price/carat for low carat diamonds.
+
+```{r}
+high_carat <- lm(log_trans_price~log_carat, data = Data, subset = carat_cat == 'high')
+par(mfrow=c(2,2))
+plot(log_log_tranform)
+```
+
+```{r}
+summary(high_carat)
+```
+
+```{r}
+low_carat <- lm(log_trans_price~log_carat, data = Data, subset = carat_cat == 'low')
+par(mfrow=c(2,2))
+plot(log_log_tranform)
+```
+
+```{r}
+summary(low_carat)
+```
+
