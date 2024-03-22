@@ -1,0 +1,112 @@
+---
+title: "Untitled"
+author: "Darreion Bailey"
+date: "2024-03-22"
+output: html_document
+---
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE, results='hide'}
+library(tidyverse)
+library(gridExtra)
+df <- read.csv("dataset.csv")
+df$cut <- factor(df$cut, levels = c("Astor Ideal", "Ideal", "Very Good", "Good"))
+df$clarity<-factor(df$clarity, levels = c("FL", "IF", "VVS1", "VVS2", "VS1", "VS2", "SI1", "SI2"))
+```
+
+# Visualizations
+
+## 1. Data & Variables
+
+\<-placeholder-\>
+
+## 2. Price vs. 4Cs
+
+\<-placeholder-\>
+
+## 3. Addressing Claims
+
+### Cut
+
+Using *Figure 1* (*Cut vs. Price*), we can see that Astor Ideal cuts have a higher average price than any other cut, which is to be expected given that it is the highest cut grade. We can also see that Ideal and Very good are almost identical, with Ideal having a slightly higher average price than Very Good. From this, we gather that a higher cut grade does correlate to a higher price linearly.
+
+Using *Figure 4 (Carat vs. Price)* - where cut is added for context - we can see that the Ideal cut dominates the upper half of the distribution. This suggests that cut has a stronger correlation to price than carat does. This fact, coupled with the tightness of the distribution and the steep gradient (density) seen in *Figure 1 (Cut vs. Price)*, confirms the claim on the Blue Nile website that the cut of the diamond **can be** the biggest factor on price.
+
+### Clarity
+
+Using *Figure 2* (*Clarity vs. Price*), we can see that Flawless (FL) diamond clarities are the most expensive. Given that there are so few FL clarity diamonds in this dataset, this would also give credence to the claim made by Blue Nile that less than 1% of all diamonds are FL clarity, though this is hardly provable given our sample size.
+
+Additionally, using *Figure 5 (Frequency of Diamond Clarity Grades)*, we can see that the distribution of diamond clarities are such that VS1 and VS2 are the most popular clarity among Blue Nile, which confirms their claim as such.
+
+### Color
+
+Using *Figure 3 (Color vs. Price)*, we can see that D, E, and F color grades are by far the most expensive, which is to be expected given that they are the highest quality color grades according to Blue Nile. Additionally, we see that G, H, and I price values hover around the midpoint, which confirms their claim that these color grades are a great value for their quality.
+
+However, as we can see in *Figure 6 (Frequency of Diamond Color Grades)*, Blue Nile appears to sell the least amount of J color grade diamonds, which fails to confirm their claim that D, E, and F color grades are the rarest among all color grades. Although, this dataset is not a representation of all diamonds harvested, and this data could be a reflection of Blue Nile standards and marketing influence.
+
+### Carat
+
+Using *Figure 4 (Carat vs. Price) -* where cut is added for context - we see a very tight distribution and a steep gradient. This indicates that carat has a very strong relationship with price. In comparison to the other of the 4Cs, the distribution are not quite as tight, and the gradient is not quite as steep, confirming their claim that carat weight is the biggest factor on price.
+
+```{r}
+# Box plot for Cut vs. Price
+fig1<-ggplot(df, aes(x = cut, y = price)) +
+  geom_violin(aes(fill = cut), show.legend = FALSE) +
+  theme_minimal() +
+  theme(plot.caption = element_text(hjust=0.5)) +
+  labs(title = "Cut vs. Price", caption="Figure 1", x = "Cut", y = "Price")
+
+```
+
+```{r}
+# Box plot for Clarity vs. Price
+fig2<-ggplot(df, aes(x = clarity, y = price)) +
+  geom_violin(aes(fill = clarity), show.legend = FALSE) +
+  theme_minimal() +
+  theme(plot.caption = element_text(hjust=0.5)) +
+  labs(title = "Clarity vs. Price", caption ="Figure 2", x = "Clarity", y = "Price")
+
+```
+
+```{r}
+# Box plot for Color vs. Price
+fig3<-ggplot(df, aes(x = color, y = price)) +
+  geom_violin(aes(fill = color), show.legend = FALSE) +
+  theme_minimal() +
+  theme(plot.caption = element_text(hjust=0.5)) +
+  labs(title = "Color vs. Price", caption="Figure 3", x = "Color", y = "Price")
+
+```
+
+```{r}
+# Scatter plot for Carat vs. Price
+fig4<-ggplot(df, aes(x = carat, y = price)) +
+  geom_point(aes(color = cut), alpha = 0.5) + # Color points by cut to add more context
+  theme_minimal() +
+  theme(plot.caption = element_text(hjust=0.5)) +
+  labs(title = "Carat vs. Price", caption="Figure 4: 'Cut' added for more context", x = "Carat", y = "Price")
+
+```
+
+```{r}
+grid.arrange(fig1,fig2,fig3,fig4, ncol=2)
+```
+
+```{r}
+# Create a bar chart for the clarity variable
+ggplot(df, aes(x = clarity)) +
+  geom_bar(fill = "orange", color = "black") +
+  theme_minimal() +
+  theme(plot.caption = element_text(hjust=0.5)) +
+  labs(title = "Frequency of Diamond Clarity Grades", caption="Figure 5", x = "Clarity", y = "Frequency")
+
+```
+
+```{r}
+# Create a bar chart for the color variable
+ggplot(df, aes(x = color)) +
+  geom_bar(fill = "green", color = "black") +
+  theme_minimal() +
+  theme(plot.caption = element_text(hjust=0.5)) +
+  labs(title = "Frequency of Diamond Color Grades", caption="Figure 6", x = "Color", y = "Frequency")
+
+```
