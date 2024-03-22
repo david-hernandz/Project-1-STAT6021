@@ -7,7 +7,7 @@ output: html_document
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE, results='hide'}
 library(tidyverse)
-df <- read.csv("dataset.csv")
+df <- read.csv("../diamonds4.csv")
 df$cut <- factor(df$cut, levels = c("Astor Ideal", "Ideal", "Very Good", "Good"))
 ```
 
@@ -64,7 +64,7 @@ ggplot(df, aes(x = carat, y = price)) +
 ggplot(df, aes(x = clarity, y = price)) +
   geom_violin(aes(fill = clarity), show.legend = FALSE) +
   theme_minimal() +
-  labs(title = "Clarity vs. Price", x = "Clarity", y = "Price")
+  labs(title = "Clarity vs. Price", x = "Clarity", y = "Price",caption="Figure 6: This chart shows the distribution of Clarity vs. Price. Diamonds with FL and VS2 have the maximum price range ")
 
 ```
 
@@ -73,7 +73,7 @@ ggplot(df, aes(x = clarity, y = price)) +
 ggplot(df, aes(x = color, y = price)) +
   geom_violin(aes(fill = color), show.legend = FALSE) +
   theme_minimal() +
-  labs(title = "Color vs. Price", x = "Color", y = "Price")
+  labs(title = "Color vs. Price", x = "Color", y = "Price",caption="Figure 7: This chart shows the distribution of Color vs. Price. Note that D being most superior carries the highest price")
 
 ```
 
@@ -82,7 +82,7 @@ ggplot(df, aes(x = color, y = price)) +
 ggplot(df, aes(x = cut, y = price)) +
   geom_violin(aes(fill = cut), show.legend = FALSE) +
   theme_minimal() +
-  labs(title = "Cut vs. Price", x = "Cut", y = "Price")
+  labs(title = "Cut vs. Price", x = "Cut", y = "Price",caption="Figure 8: This chart shows the distribution of Cut vs. Price")
 
 ```
 
@@ -92,7 +92,7 @@ ggplot(df, aes(x = carat, y = price)) +
   geom_point(aes(color = clarity), alpha = 0.5) +
   facet_wrap(~clarity) +
   theme_minimal() +
-  labs(title = "Carat vs. Price by Clarity", x = "Carat", y = "Price")
+  labs(title = "Carat vs. Price by Clarity", x = "Carat", y = "Price",caption="Figure 9: This chart shows the distribution of Carat vs. Price broken down by clarity")
 ```
 
 ```{r}
@@ -101,7 +101,7 @@ ggplot(df, aes(x = carat, y = price)) +
   geom_point(aes(color = color), alpha = 0.5) +
   facet_wrap(~color) +
   theme_minimal() +
-  labs(title = "Carat vs. Price by Color", x = "Carat", y = "Price")
+  labs(title = "Carat vs. Price by Color", x = "Carat", y = "Price",caption="Figure 10: This chart shows the distribution of Carat vs. Price,broken down by color.")
 ```
 
 ```{r}
@@ -110,7 +110,7 @@ ggplot(df, aes(x = carat, y = price)) +
   geom_point(aes(color = cut), alpha = 0.5) +
   facet_wrap(~cut) +
   theme_minimal() +
-  labs(title = "Carat vs. Price by Cut", x = "Carat", y = "Price")
+  labs(title = "Carat vs. Price by Cut", x = "Carat", y = "Price",caption="Figure 11: This chart shows the distribution of Carat vs. Price,broken down by Cut ")
 ```
 
 ## Carat vs. All other variables
@@ -119,21 +119,21 @@ ggplot(df, aes(x = carat, y = price)) +
 ggplot(df, aes(x = clarity, y = carat)) +
   geom_violin(aes(fill = clarity)) +
   theme_minimal() +
-  labs(title = "Carat vs. Clarity", x = "Clarity", y = "Carat")
+  labs(title = "Carat vs. Clarity", x = "Clarity", y = "Carat",caption="Figure 12: This chart shows the distribution of Carat vs. Clarity")
 ```
 
 ```{r}
 ggplot(df, aes(x = color, y = carat)) +
   geom_violin(aes(fill = color)) +
   theme_minimal() +
-  labs(title = "Carat vs. Color", x = "Color", y = "Carat")
+  labs(title = "Carat vs. Color", x = "Color", y = "Carat",caption="Figure 13: This chart shows the distribution of Carat vs. Color")
 ```
 
 ```{r}
 ggplot(df, aes(x = cut, y = carat)) +
   geom_violin(aes(fill = cut), show.legend = FALSE) +
   theme_minimal() +
-  labs(title = "Carat vs. Cut", x = "Cut", y = "Carat")
+  labs(title = "Carat vs. Cut", x = "Cut", y = "Carat",caption="Figure 14: This chart shows the distribution of Carat vs Cut")
 ```
 
 ## Categorical comparisons
@@ -142,19 +142,19 @@ ggplot(df, aes(x = cut, y = carat)) +
 ggplot(df, aes(x = clarity, fill = color)) +
   geom_bar(position = "fill") +
   theme_minimal() +
-  labs(title = "Clarity vs. Color", x = "Clarity", y = "Proportion")
+  labs(title = "Clarity vs. Color", x = "Clarity", y = "Proportion",caption="Figure 15: This chart shows the distribution of clarity vs Color")
 ```
 
 ```{r}
 ggplot(df, aes(x = clarity, fill = cut)) +
   geom_bar(position = "dodge") +
   theme_minimal() +
-  labs(title = "Clarity vs. Cut", x = "Clarity", y = "Count")
+  labs(title = "Clarity vs. Cut", x = "Clarity", y = "Count",caption="Figure 17: This chart shows the number of diamonds broken down by clarity and by cut ") 
 ```
 
 ```{r}
 ggplot(df, aes(x = color, fill = cut)) +
   geom_bar(position = "stack") +
   theme_minimal() +
-  labs(title = "Cut vs. Color", x = "Color", y = "Count")
+  labs(title = "Cut vs. Color", x = "Color", y = "Count",caption="Figure 18: This chart shows the distribution of dimaonds broken down by Color and Cut.")
 ```
