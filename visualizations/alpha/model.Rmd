@@ -115,8 +115,7 @@ high_carat <- which(Data$carat_cat=='high')
 
 ```{r}
 ggplot(Data, aes(x = log_carat, y = log_trans_price)) +
-  geom_point(aes(color = cut), alpha = 0.5) +
-  facet_wrap(~cut)+
+  geom_point(aes(color = carat_cat), alpha = 0.5) +
   theme_minimal() +
   labs(title = "Carat vs. Price by Color", x = "Carat", y = "Price")
 ```
@@ -127,7 +126,7 @@ ggplot(Data, aes(x = log_carat, y = log_trans_price)) +
 
 
 
-The log transformed price and carat reveals that there is little evidence to support lower price/carat for low carat diamonds.
+
 
 ```{r}
 high_carat <- lm(log_trans_price~log_carat, data = Data, subset = carat_cat == 'high')
@@ -149,3 +148,29 @@ plot(log_log_tranform)
 summary(low_carat)
 ```
 
+```{r}
+confint(log_log_tranform, param = 'log_carat', level=0.95)
+```
+Both the low and high carat 
+
+h0: B1 = 1.944020
+ha: B1 != 1.944020
+
+```{r}
+(1.90820 - 1.944020)/0.02104
+```
+
+```{r}
+qt(.95, df = 528)
+```
+
+The t-statistic is greater than the critical value so we reject the null hypothesis, there is evidence to support 'low' diamonds being more expensive than the average.
+
+h0: B1 = 1.944020
+ha: B1 != 1.944020
+
+```{r}
+(2.00343 - 1.944020)/0.01851
+```
+
+The t-statistic is greater than the critical value so we reject the null hypothesis, there is evidence to support 'high' diamonds being more expensive than the average.
