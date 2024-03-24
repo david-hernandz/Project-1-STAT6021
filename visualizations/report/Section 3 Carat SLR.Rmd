@@ -1,0 +1,149 @@
+---
+title: "Carat SLR"
+author: "Alec Pixton"
+date: "2024-03-23"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(ggplot2)
+library(MASS)
+Data <- read.csv('diamonds4.csv', header = TRUE)
+```
+
+
+```{r}
+Data$carat_cat <- ifelse(Data$carat < 0.2499 | Data$carat > 0.25 & Data$carat < .4999 | Data$carat > 0.75 & Data$carat < 0.999 | Data$carat > 1.25 & Data$carat < 1.499 | Data$carat > 1.75 & Data$carat < 1.999 | Data$carat > 2.25 & Data$carat < 2.499 | Data$carat > 2.75 & Data$carat < 2.999 | Data$carat > 3.25 & Data$carat < 3.499 | Data$carat > 3.75 & Data$carat < 3.999 | Data$carat > 4.25 & Data$carat < 4.499 | Data$carat > 4.75 & Data$carat < 4.999 | Data$carat > 5.25 & Data$carat < 5.499 | Data$carat > 5.75 & Data$carat < 5.999 | Data$carat > 6.25 & Data$carat < 6.499 | Data$carat > 6.75 & Data$carat < 6.999 | Data$carat > 7.25 & Data$carat < 7.499, "low", "high")
+```
+
+Simple Linear Regression of Carat Against Price
+
+```{r, echo = FALSE}
+ggplot(Data, aes(x=carat,y=price))+
+  geom_point()+
+  geom_smooth(method='lm')+
+  labs(x="Carat", y="Price", title="Price by Carat")
+```
+
+```{r, echo = FALSE}
+result <- lm(price~carat, data=Data)
+par(mfrow=c(2,2))
+plot(result)
+```
+
+The scatterplot shows a nonlinear pattern and data points are fitted unevenly around fitted line. Vertical variation of the price increases as carat increases. The residuals plot also shows high vertical variation and unevan fitting around the line. Since the assumptions required for simple linear regression are not met we will attempt a transformation to linearize the data. We will attempt a transformation of the response variable first to address the vertical variation.
+
+```{r, echo = FALSE}
+MASS::boxcox(result,lambda=seq(.28,0.35,by=0.01))
+```
+The boxcox suggests a lambda value of 0.31
+pricestar = price^0.31
+
+```{r, echo = FALSE}
+Data$pricestar <- Data$price^0.31
+```
+
+```{r, echo = FALSE}
+ggplot(Data, aes(x=carat,y=pricestar))+
+  geom_point()+
+  geom_smooth(method='lm')+
+  labs(x="Carat", y="Pricestar", title="Pricestar by Carat")
+```
+```{r, echo = FALSE}
+pricestar_result <- lm(pricestar~carat, data=Data)
+par(mfrow=c(2,2))
+plot(pricestar_result)
+```
+
+
+The pricestar scatterplot and residuals plot show imporvement of the vertical variation, however the assumption is still not satisfied. To further dampen the variation we choose a smaller lambda value, we will use lamba = 0 which is a log transormation.
+
+```{r, echo = FALSE}
+Data$logprice <- log(Data$price)
+```
+```{r, echo = FALSE}
+ggplot(Data, aes(x=carat,y=logprice))+
+  geom_point()+
+  geom_smooth(method='lm')+
+  labs(x="Carat", y="LogPrice", title="LogPrice by Carat")
+```
+```{r, echo = FALSE}
+logprice_result <- lm(logprice~carat, data=Data)
+par(mfrow=c(2,2))
+plot(logprice_result)
+```
+
+The scatterplot and residuals plot show that the vertical variation is constant across the x-axis. Since this assumption is met we can now address the nonlinearity of the data. To do so we will perform a log transformation on the predictor carat.
+
+```{r, echo = FALSE}
+Data$logcarat <- log(Data$carat)
+```
+```{r, echo = FALSE}
+ggplot(Data, aes(x=logcarat,y=logprice))+
+  geom_point()+
+  geom_smooth(method='lm')+
+  labs(x="LogCarat", y="LogPrice", title="LogPrice by LogCarat")
+```
+```{r, echo = FALSE}
+logprice_logcarat_result <- lm(logprice~logcarat, data = Data)
+par(mfrow=c(2,2))
+plot(logprice_logcarat_result)
+```
+Both the scatter plot and residuals plot show linear data spread evenly across the regression line. The data has constant vertical variation along the x-axis. Because the basic assumptions for simple linear regression are met we can evaluate the model.
+
+```{r, echo = FALSE}
+summary(logprice_logcarat_result)
+```
+From the summary table we can create the regression equation.
+logprice = 8.521208 + 1.944020 * logcarat
+
+logprice = log(price)
+logcarat = log(carat)
+
+To test the validity of our model we evaluate an F test.
+The null hypothesis is h0: B1 = 0. There is no linear relationship between logcarat and logprice.
+The alternative hypothesis is ha: B1 != 0. There is evidence of a linear relationship between logcarat and logprice.
+
+The p-value of the F test from the summary is <2.2*10^-16
+This p-value is much smaller than 0.05 so we reject the null hypothesis. There is evidence to support the linear relationship between logcarat and logprice.
+
+Finally, the adjusted R-squared value is 0.9546, this is a high number indicating a high linear correlation.
+
+
+
+Figure 7 shows diamonds split into 2 categories, high and low. Blue Nile claims that diamonds bought just below half-dollar and whole-dollar values are a better deal than diamonds just above half and whole-dollar values. High diamonds are those with carat values from x.00 to x.25 and x.50 to x.75 Low diamonds have carat values from x.25 to x.50 and x.75 to x.00 for example, a 4.94 carat diamond would be considered low, while a 2.61 carat diamonds would be high. To evaluate the Blue Nile's claim we compare the mean price/carat of the low category against the mean price/carat of the entire set of diamonds.
+
+```{r}
+low_carat <- lm(logprice~logcarat, data = Data, subset = carat_cat == 'low')
+par(mfrow=c(2,2))
+plot(low_carat)
+```
+
+```{r}
+summary(low_carat)
+```
+
+We perform a t-test comparing B1 from low_carat and B1 of the entire sample.
+
+h0: B1 = 1.944020 The null hypothesis is that the price/carat for low diamonds is 1.944020
+ha: B1 != 1.944020 The alternative hypothesis is that the price/carat for low diamonds is not 1.944020
+
+```{r}
+(1.90820 - 1.944020)/0.02104
+```
+
+The t-statistic is 1.702471
+
+```{r}
+qt(.975, df = 528)
+```
+
+The critical value is 1.964467
+
+Because the t-statistic is less than the critical value, we fail to reject the null hypothesis. The data supports that the low diamonds price/carat is not different from the entire sample. We conclude that Blue Nile's claim is inaccurate.
+
+
